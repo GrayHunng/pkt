@@ -137,10 +137,10 @@
             <select id="player-select" onchange="resetGame()">
                 <option value="4">4人桌</option>
                 <option value="5">5人桌</option>
-                <option value="6" selected>6人桌 (預設)</option>
+                <option value="6">6人桌</option>
                 <option value="7">7人桌</option>
                 <option value="8">8人桌</option>
-                <option value="9">9人桌</option>
+                <option value="9" selected>9人桌</option>
                 <option value="10">10人桌</option>
             </select>
         </div>
@@ -151,20 +151,17 @@
         </div>
 
         <div class="input-zone">
-            <input type="number" id="num-input" step="0.5" placeholder="輸入 BB 數" autofocus>
+            <input type="number" id="num-input" step="0.5" placeholder="空值為Fold" autofocus>
             <button class="btn-next" onclick="processNext()">NEXT</button>
         </div>
 
-        <div class="log-zone" id="log-box">
-            <div style="color: #666;">-- 等待輸入第一筆數據 (預設盲注為 SB:0.5BB, BB:1BB) --</div>
-        </div>
+        <div class="log-zone" id="log-box"></div>
 
         <button class="btn-reset" onclick="resetGame()">重設此局 ⥁</button>
     </div>
 
     <script>
-        // 核心德州撲克位置定義（最大10人）
-        // 順序由 Preflop 行動順序決定：UTG 開始，最後到 BB
+        // 各人數 Pre-flop 行動順序定義
         const POSITION_TEMPLATES = {
             4: ['UTG', 'BTN', 'SB', 'BB'],
             5: ['UTG', 'CO', 'BTN', 'SB', 'BB'],
@@ -177,10 +174,9 @@
 
         let currentPositions = [];
         let pointer = 0;
-        let maxBet = 1; // 翻前 BB 預設是 1 個大盲
+        let maxBet = 1; 
         let isFirstAction = true;
 
-        // 初始化/重設遊戲
         function resetGame() {
             const pCount = document.getElementById('player-select').value;
             currentPositions = [...POSITION_TEMPLATES[pCount]];
@@ -188,22 +184,6 @@
             maxBet = 1;
             isFirstAction = true;
 
-            document.getElementById('log-box').innerHTML = `<div style="color: #bbbbbb;">-- 牌局開始 (${pCount}人桌) --</div><div style="color: #666;">SB 投入 0.5 BB</div><div style="color: #666;">BB 投入 1 BB</div>`;
-            document.getElementById('num-input').value = '';
-            document.getElementById('num-input').focus();
-            updateUI();
-        }
-
-        // 更新狀態列顯示
-        function updateUI() {
-            if(currentPositions.length > 0) {
-                document.getElementById('current-pos').innerText = currentPositions[pointer];
-            }
-            document.getElementById('current-max-bet').innerText = maxBet;
-        }
-
-        // 核心邏輯：按下 NEXT 時判定動作
-        function processNext() {
-            const inputEl = document.getElementById('num-input');
-            const inputValue = parseFloat(inputEl.value);
-            const logBox = document.getElementById('
+            document.getElementById('log-box').innerHTML = `
+                <div style="color: #bbbbbb;">-- 牌局開始 (${pCount}人桌) --</div>
+                <div style="color: #666;">SB 投入 0.5 BB</div>
