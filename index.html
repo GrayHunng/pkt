@@ -13,8 +13,6 @@
             --success-color: #2ecc71;
             --danger-color: #e74c3c;
             --warning-color: #f1c40f;
-            
-            /* 撲克四色系統 */
             --spade: #2c3e50;
             --heart: #c0392b;
             --diamond: #2980b9;
@@ -33,7 +31,6 @@
             box-sizing: border-box;
         }
 
-        /* 頂部資訊與控制列 */
         .header {
             display: flex;
             justify-content: space-between;
@@ -50,7 +47,6 @@
             color: var(--warning-color);
         }
 
-        /* 虛擬牌桌布局 (6人桌) */
         .table-container {
             position: relative;
             width: 100%;
@@ -83,13 +79,12 @@
         .seat.current { border-color: var(--warning-color); box-shadow: 0 0 12px var(--warning-color); }
         .seat.folded { opacity: 0.4; border-color: #555; }
 
-        /* 6人座固定位置 (百分比布局) */
-        .seat-0 { top: 85%; left: 50%; } /* Hero / SB */
-        .seat-1 { top: 50%; left: 15%; } /* BB */
-        .seat-2 { top: 15%; left: 30%; } /* UTG */
-        .seat-3 { top: 15%; left: 70%; } /* HJ */
-        .seat-4 { top: 50%; left: 85%; } /* CO */
-        .seat-5 { top: 85%; left: 70%; } /* BTN */
+        .seat-0 { top: 85%; left: 50%; } 
+        .seat-1 { top: 50%; left: 15%; } 
+        .seat-2 { top: 15%; left: 30%; } 
+        .seat-3 { top: 15%; left: 70%; } 
+        .seat-4 { top: 50%; left: 85%; } 
+        .seat-5 { top: 85%; left: 70%; } 
 
         .btn-marker {
             position: absolute;
@@ -106,7 +101,6 @@
             right: -5px;
         }
 
-        /* 公共牌與手牌顯示區 */
         .cards-display {
             display: flex;
             justify-content: space-between;
@@ -137,7 +131,6 @@
         }
         .card-slot.active-card { background: #fff; color: #000; }
 
-        /* 動作與注碼操作面板 */
         .control-panel {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -169,7 +162,6 @@
         button.btn-call { background-color: var(--primary-color); }
         button.btn-raise { background-color: var(--success-color); }
 
-        /* 歷史流水帳 */
         .history-log {
             background: #000;
             padding: 8px;
@@ -182,230 +174,10 @@
             color: #aaa;
         }
 
-        /* 彈出式撲克矩陣鍵盤 */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8);
             justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-        .matrix-container {
-            background: #222;
-            padding: 15px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-        }
-        .suit-row {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 15px;
-        }
-        .suit-btn { width: 55px; height: 45px; font-size: 1.5rem; }
-        .value-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        .value-btn { padding: 10px; font-size: 1.1rem; }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <div>盲注: <span id="lbl-blinds">10/20</span></div>
-        <div class="pot-display">POT: <span id="lbl-total-pot">0</span></div>
-        <div>
-            <button onclick="undo()" style="padding:5px 10px; font-size:0.8rem;">復原 ↩</button>
-            <button onclick="initHand()" style="padding:5px 10px; font-size:0.8rem; background-color:var(--warning-color); color:#000;">下一手 ⥁</button>
-        </div>
-    </div>
-
-    <div class="table-container" id="poker-table">
-        </div>
-
-    <div class="cards-display">
-        <div class="card-zone" onclick="openCardModal('hero')">
-            <div>Hero手牌</div>
-            <div class="card-slot" id="hero-0">-</div>
-            <div class="card-slot" id="hero-1">-</div>
-        </div>
-        <div class="card-zone" onclick="openCardModal('board')">
-            <div>公共牌 (Board)</div>
-            <div class="card-slot" id="board-0">-</div>
-            <div class="card-slot" id="board-1">-</div>
-            <div class="card-slot" id="board-2">-</div>
-            <div class="card-slot" id="board-3">-</div>
-            <div class="card-slot" id="board-4">-</div>
-        </div>
-    </div>
-
-    <div class="control-panel">
-        <div class="action-grid">
-            <button class="btn-fold" onclick="handleAction('Fold')">Fold</button>
-            <button class="btn-check" onclick="handleAction('Check')">Check</button>
-            <button class="btn-call" onclick="handleAction('Call')">Call</button>
-            <button class="btn-raise" onclick="handleAction('Bet', 2)">Bet 2B</button>
-            <button class="btn-raise" onclick="handleAction('Raise', 3)">Raise 3B</button>
-            <button style="background:#8e44ad;" onclick="handleAction('All-in')">All-in</button>
-        </div>
-        <div class="sizing-grid">
-            <button onclick="handleSizing(0.33)">33% Pot</button>
-            <button onclick="handleSizing(0.50)">50% Pot</button>
-            <button onclick="handleSizing(0.66)">66% Pot</button>
-            <button onclick="handleSizing(0.75)">75% Pot</button>
-            <button onclick="handleSizing(1.00)">100% Pot</button>
-            <button style="background:#d35400;" onclick="fastEnd()">一鍵結單</button>
-        </div>
-        <div class="history-log" id="log-box">
-            -- 牌局開始 --
-        </div>
-    </div>
-
-    <div class="modal" id="card-modal">
-        <div class="matrix-container">
-            <h3 style="margin-top:0; text-align:center;">選擇牌面</h3>
-            <div class="suit-row">
-                <button class="suit-btn" style="background:var(--spade)" onclick="selectSuit('♠')">♠</button>
-                <button class="suit-btn" style="background:var(--heart)" onclick="selectSuit('♥')">♥</button>
-                <button class="suit-btn" style="background:var(--diamond)" onclick="selectSuit('♦')">♦</button>
-                <button class="suit-btn" style="background:var(--club)" onclick="selectSuit('♣')">♣</button>
-            </div>
-            <div class="value-grid">
-                <button class="value-btn" onclick="selectValue('A')">A</button>
-                <button class="value-btn" onclick="selectValue('K')">K</button>
-                <button class="value-btn" onclick="selectValue('Q')">Q</button>
-                <button class="value-btn" onclick="selectValue('J')">J</button>
-                <button class="value-btn" onclick="selectValue('T')">T</button>
-                <button class="value-btn" onclick="selectValue('9')">9</button>
-                <button class="value-btn" onclick="selectValue('8')">8</button>
-                <button class="value-btn" onclick="selectValue('7')">7</button>
-                <button class="value-btn" onclick="selectValue('6')">6</button>
-                <button class="value-btn" onclick="selectValue('5')">5</button>
-                <button class="value-btn" onclick="selectValue('4')">4</button>
-                <button class="value-btn" onclick="selectValue('3')">3</button>
-                <button class="value-btn" onclick="selectValue('2')">2</button>
-                <button class="value-btn" style="background:#555;" onclick="closeCardModal()">取消</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // 核心狀態管理
-        const POSITIONS = ['SB', 'BB', 'UTG', 'HJ', 'CO', 'BTN'];
-        let gameState = {
-            sbAmount: 10,
-            bbAmount: 20,
-            pot: 0,
-            btnIndex: 5, // 預設 5 號位是 BTN
-            currentTurn: 2, // 翻前預設從 UTG (2) 開始行動
-            players: [],
-            history: [],
-            log: []
-        };
-
-        // 初始化玩家座位數據
-        function initPlayers() {
-            gameState.players = Array.from({length: 6}, (_, i) => ({
-                id: i,
-                posName: POSITIONS[i],
-                isFolded: false,
-                currentBet: 0
-            }));
-            // 預設注入死籌碼
-            gameState.players[0].currentBet = gameState.sbAmount;
-            gameState.players[1].currentBet = gameState.bbAmount;
-            gameState.pot = gameState.sbAmount + gameState.bbAmount;
-        }
-
-        // 渲染撲克桌視覺效果
-        function renderTable() {
-            const table = document.getElementById('poker-table');
-            table.innerHTML = '';
-            gameState.players.forEach((player, i) => {
-                const seatDiv = document.createElement('div');
-                seatDiv.className = `seat seat-${i}`;
-                if (player.isFolded) seatDiv.classList.add('folded');
-                if (i === gameState.currentTurn) seatDiv.classList.add('current');
-                
-                seatDiv.innerHTML = `
-                    <div><b>${POSITIONS[i]}</b></div>
-                    <div>${player.currentBet > 0 ? 'Bet:' + player.currentBet : '待命'}</div>
-                `;
-                
-                // 渲染 D 鈕扣
-                if (i === gameState.btnIndex) {
-                    const btnMarker = document.createElement('div');
-                    btnMarker.className = 'btn-marker';
-                    btnMarker.innerText = 'D';
-                    seatDiv.appendChild(btnMarker);
-                }
-                
-                // 點擊座位可手動切換當前行動者
-                seatDiv.onclick = () => {
-                    gameState.currentTurn = i;
-                    renderTable();
-                };
-                
-                table.appendChild(seatDiv);
-            });
-            document.getElementById('lbl-total-pot').innerText = gameState.pot;
-        }
-
-        // 處理玩家動作（Fold, Check, Call, Bet/Raise）
-        function handleAction(actionType, multiplier = 1) {
-            let p = gameState.players[gameState.currentTurn];
-            if (p.isFolded) { nextTurn(); return; }
-
-            let amount = 0;
-            let logText = `${POSITIONS[p.id]}: ${actionType}`;
-
-            if (actionType === 'Fold') {
-                p.isFolded = true;
-            } else if (actionType === 'Call') {
-                // 簡化邏輯：跟注到當前最大注碼（此處展示基本累加）
-                amount = gameState.bbAmount;
-                p.currentBet += amount;
-                gameState.pot += amount;
-            } else if (actionType === 'Bet' || actionType === 'Raise') {
-                amount = gameState.bbAmount * multiplier;
-                p.currentBet += amount;
-                gameState.pot += amount;
-                logText += ` (${amount})`;
-            }
-
-            pushLog(logText);
-            saveState();
-            nextTurn();
-        }
-
-        // 處理 Pot Sizing 點擊
-        function handleSizing(percent) {
-            let p = gameState.players[gameState.currentTurn];
-            let size = Math.round(gameState.pot * percent);
-            p.currentBet += size;
-            gameState.pot += size;
-            pushLog(`${POSITIONS[p.id]}: Bet ${size} (${Math.round(percent*100)}% Pot)`);
-            saveState();
-            nextTurn();
-        }
-
-        // 輪到下一位未蓋牌的玩家
-        function nextTurn() {
-            let attempts = 0;
-            do {
-                gameState.currentTurn = (gameState.currentTurn + 1) % 6;
-                attempts++;
-            } while (gameState.players[gameState.currentTurn].isFolded && attempts < 6);
-            
-            renderTable();
-        }
-
-        // 快速結單
-        function fastEnd() {
-            pushLog("--- 手牌結束，清空底池 ---");
-            gameState.pot = 0;
-            gameState.players.forEach(p => p.currentBet = 0);
+            align-
