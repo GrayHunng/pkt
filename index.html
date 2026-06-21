@@ -3,20 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>德州撲克手牌極速記錄器</title>
+    <title>德州撲克極簡數字記錄器</title>
     <style>
         :root {
-            --bg-color: #1a1a1a;
-            --card-bg: #2d2d2d;
-            --text-color: #ffffff;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
             --primary-color: #3498db;
             --success-color: #2ecc71;
-            --danger-color: #e74c3c;
-            --warning-color: #f1c40f;
-            --spade: #2c3e50;
-            --heart: #c0392b;
-            --diamond: #2980b9;
-            --club: #27ae60;
+            --text-color: #ffffff;
         }
 
         body {
@@ -24,160 +18,192 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            margin-bottom: 10px;
         }
 
-        .pot-display {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--warning-color);
-        }
-
-        .table-container {
-            position: relative;
+        .container {
             width: 100%;
-            height: 220px;
-            background: #1e5631;
-            border: 8px solid #3d2314;
-            border-radius: 110px;
-            margin-bottom: 10px;
+            max-width: 480px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             box-sizing: border-box;
         }
 
-        .seat {
-            position: absolute;
-            width: 75px;
-            height: 55px;
-            background: rgba(0,0,0,0.6);
-            border: 2px solid #fff;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transform: translate(-50%, -50%);
-            transition: all 0.2s;
-        }
-
-        .seat.active { border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-color); }
-        .seat.current { border-color: var(--warning-color); box-shadow: 0 0 12px var(--warning-color); }
-        .seat.folded { opacity: 0.4; border-color: #555; }
-
-        .seat-0 { top: 85%; left: 50%; } 
-        .seat-1 { top: 50%; left: 15%; } 
-        .seat-2 { top: 15%; left: 30%; } 
-        .seat-3 { top: 15%; left: 70%; } 
-        .seat-4 { top: 50%; left: 85%; } 
-        .seat-5 { top: 85%; left: 70%; } 
-
-        .btn-marker {
-            position: absolute;
-            background: #fff;
-            color: #000;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-weight: bold;
+        h2 {
             text-align: center;
-            line-height: 18px;
-            font-size: 0.65rem;
-            bottom: -5px;
-            right: -5px;
+            margin-top: 0;
+            color: var(--primary-color);
         }
 
-        .cards-display {
+        .setup-zone {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
         }
 
-        .card-zone {
-            background: var(--card-bg);
-            padding: 8px;
-            border-radius: 8px;
-            flex: 1;
+        select, input {
+            background: #2a2a2a;
+            color: white;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input {
+            width: 120px;
             text-align: center;
         }
 
-        .card-slot {
-            display: inline-block;
-            width: 35px;
-            height: 50px;
-            background: #444;
-            border-radius: 4px;
-            line-height: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 0 2px;
-            cursor: pointer;
-            vertical-align: middle;
-        }
-        .card-slot.active-card { background: #fff; color: #000; }
-
-        .control-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        .input-zone {
+            display: flex;
             gap: 10px;
-            flex-grow: 1;
-        }
-
-        .action-grid, .sizing-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         button {
-            background: #3a3a3a;
+            background: var(--primary-color);
             color: white;
             border: none;
+            padding: 10px 20px;
             border-radius: 6px;
             font-size: 1rem;
             font-weight: bold;
-            padding: 12px 5px;
             cursor: pointer;
-            user-select: none;
         }
 
-        button:active { filter: brightness(1.2); }
-        button.btn-fold { background-color: var(--danger-color); }
-        button.btn-check { background-color: #7f8c8d; }
-        button.btn-call { background-color: var(--primary-color); }
-        button.btn-raise { background-color: var(--success-color); }
+        button:active {
+            filter: brightness(0.9);
+        }
 
-        .history-log {
+        button.btn-next {
+            background: var(--success-color);
+            flex-grow: 1;
+        }
+
+        button.btn-reset {
+            background: #e74c3c;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .status-bar {
             background: #000;
-            padding: 8px;
+            padding: 10px;
             border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            overflow-y: auto;
-            max-height: 90px;
-            grid-column: span 2;
-            color: #aaa;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #ffcc00;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-
+        .log-zone {
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 15px;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .log-item {
+            margin-bottom: 5px;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>撲克數字速記器</h2>
+
+        <div class="setup-zone">
+            <label for="player-select">選擇玩家人數：</label>
+            <select id="player-select" onchange="resetGame()">
+                <option value="4">4人桌</option>
+                <option value="5">5人桌</option>
+                <option value="6" selected>6人桌 (預設)</option>
+                <option value="7">7人桌</option>
+                <option value="8">8人桌</option>
+                <option value="9">9人桌</option>
+                <option value="10">10人桌</option>
+            </select>
+        </div>
+
+        <div class="status-bar">
+            <div>當前行動位置: <span id="current-pos">UTG</span></div>
+            <div>當前最高注碼: <span id="current-max-bet">1</span> BB</div>
+        </div>
+
+        <div class="input-zone">
+            <input type="number" id="num-input" step="0.5" placeholder="輸入 BB 數" autofocus>
+            <button class="btn-next" onclick="processNext()">NEXT</button>
+        </div>
+
+        <div class="log-zone" id="log-box">
+            <div style="color: #666;">-- 等待輸入第一筆數據 (預設盲注為 SB:0.5BB, BB:1BB) --</div>
+        </div>
+
+        <button class="btn-reset" onclick="resetGame()">重設此局 ⥁</button>
+    </div>
+
+    <script>
+        // 核心德州撲克位置定義（最大10人）
+        // 順序由 Preflop 行動順序決定：UTG 開始，最後到 BB
+        const POSITION_TEMPLATES = {
+            4: ['UTG', 'BTN', 'SB', 'BB'],
+            5: ['UTG', 'CO', 'BTN', 'SB', 'BB'],
+            6: ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
+            7: ['UTG', 'UTG+1', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
+            8: ['UTG', 'UTG+1', 'UTG+2', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
+            9: ['UTG', 'UTG+1', 'UTG+2', 'MP', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
+            10: ['UTG', 'UTG+1', 'UTG+2', 'MP1', 'MP2', 'HJ', 'CO', 'BTN', 'SB', 'BB']
+        };
+
+        let currentPositions = [];
+        let pointer = 0;
+        let maxBet = 1; // 翻前 BB 預設是 1 個大盲
+        let isFirstAction = true;
+
+        // 初始化/重設遊戲
+        function resetGame() {
+            const pCount = document.getElementById('player-select').value;
+            currentPositions = [...POSITION_TEMPLATES[pCount]];
+            pointer = 0;
+            maxBet = 1;
+            isFirstAction = true;
+
+            document.getElementById('log-box').innerHTML = `<div style="color: #bbbbbb;">-- 牌局開始 (${pCount}人桌) --</div><div style="color: #666;">SB 投入 0.5 BB</div><div style="color: #666;">BB 投入 1 BB</div>`;
+            document.getElementById('num-input').value = '';
+            document.getElementById('num-input').focus();
+            updateUI();
+        }
+
+        // 更新狀態列顯示
+        function updateUI() {
+            if(currentPositions.length > 0) {
+                document.getElementById('current-pos').innerText = currentPositions[pointer];
+            }
+            document.getElementById('current-max-bet').innerText = maxBet;
+        }
+
+        // 核心邏輯：按下 NEXT 時判定動作
+        function processNext() {
+            const inputEl = document.getElementById('num-input');
+            const inputValue = parseFloat(inputEl.value);
+            const logBox = document.getElementById('
